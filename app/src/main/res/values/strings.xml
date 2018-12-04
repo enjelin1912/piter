@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Piter</string>
+    <string name="home">Home</string>
+    <string name="moments">Moments</string>
+    <string name="configuration">Configuration</string>
+    <string name="about">About</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="character_count_label">Character count :</string>
+    <string name="charcount_limit">/ 280</string>
+    <string name="tweet">Tweet</string>
+    <string name="whats_happening">What\'s happening?</string>
+    <string name="no_tweet_found">No Tweet Found</string>
+    <string name="tweet_saved">Tweet Saved</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="save_tweet">Save Tweet</string>
+    <string name="areyousure_savetweet">Are you sure you want to save this tweet?</string>
+    <string name="access_denied">Access Denied</string>
+    <string name="storage_permissionrequired">Storage Permission is required to save or select image.</string>
+    <string name="ok">OK</string>
+    <string name="delete_tweet">Delete Tweet</string>
+    <string name="areyousure_deletetweet">Are you sure you want to delete this tweet? This action cannot be undone.</string>
+    <string name="delete">Delete</string>
+    <string name="already_viewing_tag">You are already currently looking at this tag</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

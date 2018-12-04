@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_24dp"
+            android:title="@string/home"/>
+
+        <item android:id="@+id/nav_moments"
+            android:icon="@drawable/ic_flash_on_24dp"
+            android:title="@string/moments"/>
+
+        <item android:id="@+id/nav_configuration"
+            android:icon="@drawable/ic_build_24dp"
+            android:title="@string/configuration"/>
+
+        <item android:id="@+id/nav_about"
+            android:icon="@drawable/ic_business_24dp"
+            android:title="@string/about"/>
+
+        <item android:id="@+id/nav_contactus"
+            android:icon="@drawable/ic_email_24dp"
+            android:title="@string/contact_us"/>
+    </group>
+</menu>
