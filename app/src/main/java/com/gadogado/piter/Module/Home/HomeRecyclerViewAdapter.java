@@ -1,5 +1,6 @@
 package com.gadogado.piter.Module.Home;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -48,14 +49,12 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         final Tweet tweet = list.get(position);
-        String[] datetime = Utility.splitDateTime(tweet.getDate());
 
-        holder.date.setText(datetime[0]);
-        holder.monthYear.setText(datetime[1]);
-        holder.time.setText(datetime[2]);
+        holder.date.setText(Utility.getDateTimeFormat(tweet.date));
 
-        holder.message.setText(Utility.setTags(context, tweet.getMessage(), new Utility.HashtagListener() {
+        holder.message.setText(Utility.setTags(context, tweet.message, new Utility.HashtagListener() {
             @Override
             public void performSearch(String hashtag) {
                 listener.searchHashtag(hashtag);
@@ -64,10 +63,10 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
 
         holder.message.setMovementMethod(LinkMovementMethod.getInstance());
 
-        if (tweet.getImage() != null) {
+        if (tweet.image != null) {
             holder.image.setVisibility(View.VISIBLE);
             Glide.with(context)
-                    .load(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + tweet.getImage())
+                    .load(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + tweet.image)
                     .into(holder.image);
 
             holder.image.setOnClickListener(new View.OnClickListener() {
@@ -75,13 +74,14 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
                 public void onClick(View v) {
                     listener.viewImage(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString()
                             + "/"
-                            + tweet.getImage());
+                            + tweet.image);
                 }
             });
         }
         else {
             holder.image.setVisibility(View.GONE);
         }
+
     }
 
     @Override
@@ -95,8 +95,6 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.home_date) TextView date;
-        @BindView(R.id.home_monthyear) TextView monthYear;
-        @BindView(R.id.home_time) TextView time;
         @BindView(R.id.home_message) TextView message;
         @BindView(R.id.home_image) ImageView image;
 

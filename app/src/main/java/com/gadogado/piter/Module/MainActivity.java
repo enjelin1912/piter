@@ -1,5 +1,9 @@
 package com.gadogado.piter.Module;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -14,7 +18,9 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.gadogado.piter.Helper.Utility;
 import com.gadogado.piter.Module.About.AboutFragment;
+import com.gadogado.piter.Module.Authentication.LoginActivity;
 import com.gadogado.piter.Module.Configuration.ConfigurationFragment;
 import com.gadogado.piter.Module.ContactUs.ContactUsFragment;
 import com.gadogado.piter.Module.Home.HomeFragment;
@@ -32,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.main_nav_view) NavigationView navigationView;
     @BindView(R.id.main_frame_layout) FrameLayout frameLayout;
 
+    private MainViewModel mainViewModel;
+    private Context context = MainActivity.this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,9 +52,29 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_24dp);
         getSupportActionBar().setTitle(null);
 
+        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.nav_signout) {
+                    Utility.showOptionAlertDialog(context, R.string.sign_out, R.string.signout_areyousure, true,
+                            new Utility.DialogListener() {
+                                @Override
+                                public void executeYes() {
+                                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                    startActivity(intent);
+                                }
+
+                                @Override
+                                public void executeNo() {
+
+                                }
+                            });
+
+                    return false;
+                }
+
                 item.setChecked(true);
                 drawerLayout.closeDrawers();
 
@@ -54,8 +83,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        navigationView.setCheckedItem(R.id.nav_home);
-        setFragment(R.id.nav_home);
+        if (mainViewModel.getCurrentID() == 0) {
+            navigationView.setCheckedItem(R.id.nav_home);
+            setFragment(R.id.nav_home);
+        }
+        else {
+            navigationView.setCheckedItem(mainViewModel.getCurrentID());
+            setFragment(mainViewModel.getCurrentID());
+        }
     }
 
     @Override
@@ -103,6 +138,8 @@ public class MainActivity extends AppCompatActivity {
                 toolbarTitle.setText(R.string.app_name);
                 break;
         }
+
+        mainViewModel.setCurrentID(id);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);

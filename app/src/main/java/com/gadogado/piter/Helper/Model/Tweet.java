@@ -1,59 +1,40 @@
 package com.gadogado.piter.Helper.Model;
 
-import java.util.List;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
+import com.gadogado.piter.Helper.Database.DBConstant;
+
+@Entity(tableName = DBConstant.TABLE_TWEETS)
 public class Tweet {
-    private int tweetID;
-    private String message;
-    private String date;
-    private String image;
-    private String hashtag;
 
-    public Tweet(int tweetID, String message, String date, String image, String hashtag) {
-        this.tweetID = tweetID;
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    @ColumnInfo(name = DBConstant.COL_ID)
+    public int id;
+
+    @ColumnInfo(name = DBConstant.COL_MESSAGE)
+    public String message;
+
+    @ColumnInfo(name = DBConstant.COL_DATE)
+    public String date;
+
+    @ColumnInfo(name = DBConstant.COL_IMAGE)
+    public String image;
+
+    @ColumnInfo(name = DBConstant.COL_HASHTAG)
+    public String hashtag;
+
+    @ColumnInfo(name = DBConstant.COL_USERNAME)
+    public String username;
+
+    public Tweet(String message, String date, String image, String hashtag, String username) {
         this.message = message;
         this.date = date;
         this.image = image;
         this.hashtag = hashtag;
-    }
-
-    public int getTweetID() {
-        return tweetID;
-    }
-
-    public void setTweetID(int tweetID) {
-        this.tweetID = tweetID;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getHashtag() {
-        return hashtag;
-    }
-
-    public void setHashtag(String hashtag) {
-        this.hashtag = hashtag;
+        this.username = username;
     }
 }

@@ -13,23 +13,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Module.MainActivity" />
         <activity
-            android:name=".Module.MainActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Module.SplashActivity"
-            android:screenOrientation="portrait">
+            android:name=".Module.Authentication.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Module.Home.TweetActivity"
-            android:screenOrientation="portrait" />
+        <activity android:name=".Module.Home.TweetActivity" />
         <activity android:name=".Module.ViewImageActivity" />
-        <activity android:name=".Module.Home.SearchActivity"></activity>
+        <activity android:name=".Module.Home.SearchActivity" />
+        <activity android:name=".Module.Authentication.LoginActivity" />
+        <activity android:name=".Module.Authentication.RegisterActivity"></activity>
     </application>
 
 </manifest>

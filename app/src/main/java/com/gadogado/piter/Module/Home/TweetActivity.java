@@ -1,6 +1,8 @@
 package com.gadogado.piter.Module.Home;
 
 import android.Manifest;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,9 +18,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,10 +30,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gadogado.piter.Helper.Constant;
-import com.gadogado.piter.Helper.Database.DatabaseHelper;
-import com.gadogado.piter.Helper.LocalStorage;
 import com.gadogado.piter.Helper.Model.Tweet;
 import com.gadogado.piter.Helper.Utility;
+import com.gadogado.piter.Module.DatabaseListener;
+import com.gadogado.piter.Module.Home.ViewModel.TweetViewModel;
 import com.gadogado.piter.R;
 import com.google.gson.Gson;
 
@@ -48,14 +49,7 @@ import butterknife.ButterKnife;
 
 public class TweetActivity extends AppCompatActivity {
 
-    public interface TweetListener {
-        void refreshList();
-    }
-
-    public static TweetListener listener;
-
     @BindView(R.id.layout_toolbar_twitter) Toolbar toolbar;
-    @BindView(R.id.toolbar_tweet_close) ImageView closeButton;
     @BindView(R.id.toolbar_tweet_button) Button tweetButton;
 
     @BindView(R.id.tweet_charcount) TextView charCountText;
@@ -69,17 +63,12 @@ public class TweetActivity extends AppCompatActivity {
     @BindView(R.id.tweet_clear) ImageButton clearButton;
 
     private Context context = TweetActivity.this;
-    private Gson gson;
-    private DatabaseHelper dbHelper;
+    private TweetViewModel tweetViewModel;
 
     private final int PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private final int REQUEST_CODE_CAMERA = 1;
     private final int REQUEST_CODE_GALLERY = 2;
     private boolean accessCamera;
-
-    private Bitmap bitmap;
-    private Uri uri;
-    private String filename = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,12 +76,14 @@ public class TweetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tweet);
 
         ButterKnife.bind(this);
-        gson = new Gson();
+
+        tweetViewModel = ViewModelProviders.of(this).get(TweetViewModel.class);
 
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
         getSupportActionBar().setTitle(null);
 
-        closeButton.setOnClickListener(new ClickListener());
         tweetButton.setOnClickListener(new ClickListener());
         cameraButton.setOnClickListener(new ClickListener());
         galleryButton.setOnClickListener(new ClickListener());
@@ -100,7 +91,27 @@ public class TweetActivity extends AppCompatActivity {
 
         tweetButton.setTextColor(Color.GRAY);
         tweetButton.setEnabled(false);
-        clearButton.setEnabled(false);
+
+        if (tweetViewModel.getBitmap() == null && tweetViewModel.getUri() == null) {
+            clearButton.setEnabled(false);
+            clearButton.setBackgroundTintList(ContextCompat.getColorStateList(context, android.R.color.darker_gray));
+
+            tweetImage.setVisibility(View.GONE);
+        }
+        else {
+            clearButton.setEnabled(true);
+            clearButton.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.colorWarning));
+
+            tweetImage.setVisibility(View.VISIBLE);
+
+            if (tweetViewModel.getBitmap() != null) {
+                tweetImage.setImageBitmap(tweetViewModel.getBitmap());
+            }
+
+            if (tweetViewModel.getUri() != null) {
+                tweetImage.setImageURI(tweetViewModel.getUri());
+            }
+        }
 
         tweetField.addTextChangedListener(new TextChangedListener());
     }
@@ -109,10 +120,6 @@ public class TweetActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.toolbar_tweet_close:
-                    finish();
-                    break;
-
                 case R.id.toolbar_tweet_button:
                     handleSaveTweet();
                     break;
@@ -128,8 +135,8 @@ public class TweetActivity extends AppCompatActivity {
                     break;
 
                 case R.id.tweet_clear:
-                    bitmap = null;
-                    uri = null;
+                    tweetViewModel.setBitmap(null);
+                    tweetViewModel.setUri(null);
 
                     tweetImage.setVisibility(View.GONE);
                     clearButton.setEnabled(false);
@@ -174,7 +181,8 @@ public class TweetActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
-            bitmap = (Bitmap) extras.get("data");
+            Bitmap bitmap = (Bitmap) extras.get("data");
+            tweetViewModel.setBitmap(bitmap);
             tweetImage.setImageBitmap(bitmap);
             tweetImage.setVisibility(View.VISIBLE);
 
@@ -182,7 +190,8 @@ public class TweetActivity extends AppCompatActivity {
             clearButton.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.colorWarning));
         }
         else if (requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK) {
-            uri = data.getData();
+            Uri uri = data.getData();
+            tweetViewModel.setUri(uri);
             tweetImage.setImageURI(uri);
             tweetImage.setVisibility(View.VISIBLE);
 
@@ -196,8 +205,8 @@ public class TweetActivity extends AppCompatActivity {
                 new Utility.DialogListener() {
                     @Override
                     public void executeYes() {
-                        if (bitmap != null || uri != null) {
-                            saveImage();
+                        if (tweetViewModel.getBitmap() != null || tweetViewModel.getUri() != null) {
+                            tweetViewModel.saveImage();
                         }
 
                         StringBuilder tagString = new StringBuilder();
@@ -213,10 +222,18 @@ public class TweetActivity extends AppCompatActivity {
                             }
                         }
 
-                        dbHelper = new DatabaseHelper(context);
-                        dbHelper.addTweet(tweetField.getText().toString(), filename, tagString.toString());
-                        finish();
-                        listener.refreshList();
+                        tweetViewModel.addTweet(new Tweet(tweetField.getText().toString().trim(),
+                                        Utility.getCurrentDateTime(),
+                                        tweetViewModel.getFilename(),
+                                        tagString.toString(),
+                                        Utility.getUserInfo(context).username),
+                                new DatabaseListener() {
+                                    @Override
+                                    public void resultCallback(boolean result) {
+                                        finish();
+                                        Toast.makeText(context, R.string.tweet_saved, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     }
 
                     @Override
@@ -224,31 +241,6 @@ public class TweetActivity extends AppCompatActivity {
 
                     }
                 });
-    }
-
-    private void saveImage() {
-        filename = "Piter_" +
-                (new SimpleDateFormat("yyyyMMddHHmmss", Locale.US).format(Calendar.getInstance().getTime())) +
-                ".jpg";
-
-        File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString(), filename);
-
-        try {
-            FileOutputStream outputStream = new FileOutputStream(file);
-
-            if (bitmap == null) {
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            }
-
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-
-            outputStream.flush();
-            outputStream.close();
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            Toast.makeText(this, ex.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-        }
     }
 
     private class TextChangedListener implements TextWatcher {
@@ -280,5 +272,15 @@ public class TweetActivity extends AppCompatActivity {
 
         @Override
         public void afterTextChanged(Editable s) { }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

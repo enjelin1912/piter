@@ -7,6 +7,7 @@ import com.gadogado.piter.BuildConfig;
 
 public class LocalStorage {
     private static final String PITER_LOCAL_STORAGE = BuildConfig.APPLICATION_ID + ".localstorage";
+    public static final String USER_INFO = "userInfo";
 
     public static void setItem(Context context, String key, String value) {
         SharedPreferences.Editor editor = context.getSharedPreferences(PITER_LOCAL_STORAGE, Context.MODE_PRIVATE).edit();

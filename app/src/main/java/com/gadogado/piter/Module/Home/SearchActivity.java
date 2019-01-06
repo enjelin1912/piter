@@ -1,5 +1,9 @@
 package com.gadogado.piter.Module.Home;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -7,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,10 +22,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gadogado.piter.Helper.Database.DatabaseConstant;
-import com.gadogado.piter.Helper.Database.DatabaseHelper;
+import com.gadogado.piter.Helper.Database.DBConstant;
 import com.gadogado.piter.Helper.Model.Tweet;
 import com.gadogado.piter.Helper.Utility;
+import com.gadogado.piter.Module.DatabaseListener;
+import com.gadogado.piter.Module.Home.ViewModel.SearchViewModel;
 import com.gadogado.piter.Module.ViewImageActivity;
 import com.gadogado.piter.R;
 
@@ -36,16 +42,11 @@ public class SearchActivity extends AppCompatActivity {
     @BindView(R.id.search_notweetfound) TextView noTweetFoundText;
 
     private HomeRecyclerViewAdapter adapter;
-    private List<Tweet> tweetList;
-
-    private DatabaseHelper dbHelper;
-    private Cursor cursor;
-    private RetrieveTweets retrieveTweetsTask;
 
     private Context context = SearchActivity.this;
+    private SearchViewModel searchViewModel;
 
     public static final String INTENT_SEARCHTAG = "intentSearchTag";
-    private String searchedTag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +55,32 @@ public class SearchActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        searchedTag = getIntent().getStringExtra(INTENT_SEARCHTAG);
+        recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
 
-        retrieveTweetsTask = new RetrieveTweets();
-        retrieveTweetsTask.execute();
+        searchViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
+        searchViewModel.setTag(getIntent().getStringExtra(INTENT_SEARCHTAG));
+        searchViewModel.getTweets().observe(this, new Observer<List<Tweet>>() {
+            @Override
+            public void onChanged(@Nullable List<Tweet> tweets) {
+                adapter = assignAdapter(tweets);
+                recyclerView.setAdapter(adapter);
+
+                if (tweets.size() == 0) {
+                    noTweetFoundText.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
+                else {
+                    noTweetFoundText.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+
+                    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeRecylerView());
+                    itemTouchHelper.attachToRecyclerView(recyclerView);
+                }
+            }
+        });
     }
 
-    private HomeRecyclerViewAdapter assignAdapter() {
+    private HomeRecyclerViewAdapter assignAdapter(List<Tweet> tweetList) {
         return new HomeRecyclerViewAdapter(context, tweetList, new HomeRecyclerViewAdapter.HomeListListener() {
             @Override
             public void viewImage(String imagePath) {
@@ -71,7 +91,7 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void searchHashtag(String hashtag) {
-                if (hashtag.equals(searchedTag)) {
+                if (hashtag.equals(searchViewModel.getTag())) {
                     Toast.makeText(context, R.string.already_viewing_tag, Toast.LENGTH_SHORT).show();
                 }
                 else {
@@ -81,54 +101,6 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private class RetrieveTweets extends AsyncTask<Void, Void, Boolean> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            dbHelper = new DatabaseHelper(context);
-            recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-            tweetList = new ArrayList<>();
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            cursor = dbHelper.getTweetsByTag(searchedTag);
-
-            if (cursor.getCount() != 0) {
-                while (cursor.moveToNext()) {
-                    tweetList.add(new Tweet(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseConstant.COL_ID)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(DatabaseConstant.COL_MESSAGE)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(DatabaseConstant.COL_DATE)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(DatabaseConstant.COL_IMAGE)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(DatabaseConstant.COL_HASHTAG))));
-                }
-
-                adapter = assignAdapter();
-            }
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            dbHelper.close();
-            if (tweetList.size() != 0) {
-                recyclerView.setAdapter(adapter);
-
-                noTweetFoundText.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-
-                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeRecylerView());
-                itemTouchHelper.attachToRecyclerView(recyclerView);
-            }
-            else {
-                noTweetFoundText.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
-            }
-        }
     }
 
     private class SwipeRecylerView extends ItemTouchHelper.SimpleCallback {
@@ -174,9 +146,13 @@ public class SearchActivity extends AppCompatActivity {
                         new Utility.DialogListener() {
                             @Override
                             public void executeYes() {
-                                dbHelper = new DatabaseHelper(context);
-                                dbHelper.deleteTweet(adapter.getCurrentTweet(viewHolder.getAdapterPosition()).getTweetID());
-                                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+                                searchViewModel.deleteTweet(adapter.getCurrentTweet(viewHolder.getAdapterPosition()),
+                                        new DatabaseListener() {
+                                            @Override
+                                            public void resultCallback(boolean result) {
+                                                Toast.makeText(context, R.string.tweet_deleted, Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                             }
 
                             @Override
@@ -186,20 +162,5 @@ public class SearchActivity extends AppCompatActivity {
                         });
             }
         }
-    }
-
-    @Override
-    public void onStop() {
-        if (cursor != null) {
-            cursor.close();
-        }
-
-        if (retrieveTweetsTask != null && retrieveTweetsTask.getStatus() == AsyncTask.Status.RUNNING) {
-            retrieveTweetsTask.cancel(true);
-        }
-
-        retrieveTweetsTask = null;
-
-        super.onStop();
     }
 }

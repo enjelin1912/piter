@@ -5,6 +5,7 @@
     <string name="configuration">Configuration</string>
     <string name="about">About</string>
     <string name="contact_us">Contact Us</string>
+    <string name="sign_out">Sign Out</string>
     <string name="character_count_label">Character count :</string>
     <string name="charcount_limit">/ 280</string>
     <string name="tweet">Tweet</string>
@@ -22,6 +23,23 @@
     <string name="areyousure_deletetweet">Are you sure you want to delete this tweet? This action cannot be undone.</string>
     <string name="delete">Delete</string>
     <string name="already_viewing_tag">You are already currently looking at this tag</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="no_account_yet">No account yet?</string>
+    <string name="sign_up_here">Sign up here</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="name">Name</string>
+    <string name="username_password_minchar">Username and Password should be 6 characters minimum.</string>
+    <string name="warning">Warning</string>
+    <string name="username_used">This username is already used.</string>
+    <string name="success">Success</string>
+    <string name="you_are_registered">You are registered.</string>
+    <string name="username_password_invalid">Invalid username or password.</string>
+    <string name="please_wait">Please Wait</string>
+    <string name="signout_areyousure">Are you sure you want to sign out?</string>
+    <string name="tweet_deleted">Tweet Deleted</string>
+    <string name="search">Search</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
