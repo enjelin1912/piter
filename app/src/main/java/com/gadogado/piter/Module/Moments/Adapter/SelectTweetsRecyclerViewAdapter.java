@@ -1,10 +1,9 @@
-package com.gadogado.piter.Module.Moments;
+package com.gadogado.piter.Module.Moments.Adapter;
 
 import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

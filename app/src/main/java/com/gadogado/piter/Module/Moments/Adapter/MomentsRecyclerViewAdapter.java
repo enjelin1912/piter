@@ -1,4 +1,4 @@
-package com.gadogado.piter.Module.Moments;
+package com.gadogado.piter.Module.Moments.Adapter;
 
 import android.content.Context;
 import android.os.Environment;
@@ -22,12 +22,18 @@ import butterknife.ButterKnife;
 
 public class MomentsRecyclerViewAdapter extends RecyclerView.Adapter<MomentsRecyclerViewAdapter.ViewHolder> {
 
+    public interface MomentsListener {
+        void viewMoment(Moment moment);
+    }
+
+    private MomentsListener listener;
     private List<Moment> list;
     private Context context;
 
-    public MomentsRecyclerViewAdapter(Context context, List<Moment> list) {
+    public MomentsRecyclerViewAdapter(Context context, List<Moment> list, MomentsListener listener) {
         this.context = context;
         this.list = list;
+        this.listener = listener;
     }
 
     @NonNull
@@ -39,7 +45,7 @@ public class MomentsRecyclerViewAdapter extends RecyclerView.Adapter<MomentsRecy
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Moment mo = list.get(position);
+        final Moment mo = list.get(position);
         holder.momentTitle.setText(mo.title);
         holder.momentDate.setText(Utility.getDateTimeFormat(mo.date));
         holder.momentDescription.setText(mo.description);
@@ -53,6 +59,13 @@ public class MomentsRecyclerViewAdapter extends RecyclerView.Adapter<MomentsRecy
         else {
             holder.momentImage.setVisibility(View.GONE);
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.viewMoment(mo);
+            }
+        });
     }
 
     @Override

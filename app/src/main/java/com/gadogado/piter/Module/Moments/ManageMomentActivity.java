@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -31,12 +32,18 @@ import com.gadogado.piter.Module.DatabaseListener;
 import com.gadogado.piter.Module.Moments.ViewModel.ManageMomentViewModel;
 import com.gadogado.piter.R;
 
+import org.xdty.preference.colorpicker.ColorPickerDialog;
+import org.xdty.preference.colorpicker.ColorPickerSwatch;
+
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ManageMomentActivity extends AppCompatActivity {
+
+    public static SaveMomentListener listener;
 
     @BindView(R.id.layout_toolbar) Toolbar toolbar;
     @BindView(R.id.toolbar_title) TextView toolbarTitle;
@@ -77,9 +84,12 @@ public class ManageMomentActivity extends AppCompatActivity {
         manageMomentViewModel = ViewModelProviders.of(this).get(ManageMomentViewModel.class);
         manageMomentViewModel.setSelectedTweets(getIntent().getIntegerArrayListExtra(INTENT_MANAGEMOMENT));
 
+        backgroundColorView.setBackgroundColor(manageMomentViewModel.getSelectedColor());
+
         cameraButton.setOnClickListener(new ClickListener());
         galleryButton.setOnClickListener(new ClickListener());
         clearButton.setOnClickListener(new ClickListener());
+        backgroundColorView.setOnClickListener(new ClickListener());
 
         if (manageMomentViewModel.getBitmap() == null && manageMomentViewModel.getUri() == null) {
             clearButton.setEnabled(false);
@@ -128,10 +138,34 @@ public class ManageMomentActivity extends AppCompatActivity {
                     break;
 
                 case R.id.moments_backgroundcolor:
-
+                    handleColorPicker();
                     break;
             }
         }
+    }
+
+    private void handleColorPicker() {
+        int[] colorPickerColor = getResources().getIntArray(R.array.colorPicker);
+
+        ColorPickerDialog dialog = ColorPickerDialog.newInstance(R.string.color_picker_default_title,
+                colorPickerColor,
+                manageMomentViewModel.getSelectedColor(),
+                3,
+                ColorPickerDialog.SIZE_SMALL,
+                true,
+                2,
+                Color.BLACK
+        );
+
+        dialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
+            @Override
+            public void onColorSelected(int color) {
+                manageMomentViewModel.setSelectedColor(color);
+                backgroundColorView.setBackgroundColor(color);
+            }
+        });
+
+        dialog.show(getFragmentManager(), "color_dialog_test");
     }
 
     private void getStoragePermission() {
@@ -209,6 +243,11 @@ public class ManageMomentActivity extends AppCompatActivity {
     }
 
     private void doSave() {
+        if (titleField.getText().toString().trim().isEmpty()) {
+            Toast.makeText(context, R.string.title_required, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Utility.showOptionAlertDialog(context, R.string.save_moment, R.string.areyousure_savemoment, false,
                 new Utility.DialogListener() {
                     @Override
@@ -216,6 +255,8 @@ public class ManageMomentActivity extends AppCompatActivity {
                         if (manageMomentViewModel.getBitmap() != null || manageMomentViewModel.getUri() != null) {
                             manageMomentViewModel.saveImage();
                         }
+
+                        Collections.sort(manageMomentViewModel.getSelectedTweets());
 
                         StringBuilder tweetID = new StringBuilder();
 
@@ -232,12 +273,13 @@ public class ManageMomentActivity extends AppCompatActivity {
                                         Utility.getCurrentDateTime(),
                                         tweetID.toString(),
                                         manageMomentViewModel.getFilename(),
-                                        "",
+                                        Utility.getColorHex(manageMomentViewModel.getSelectedColor()),
                                         Utility.getUserInfo(context).username),
                                 new DatabaseListener() {
                                     @Override
                                     public void resultCallback(boolean result) {
                                         finish();
+                                        listener.closeSelectTweet();
                                         Toast.makeText(context, R.string.moment_saved, Toast.LENGTH_SHORT).show();
                                     }
                                 });

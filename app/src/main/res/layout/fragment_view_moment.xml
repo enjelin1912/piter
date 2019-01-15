@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/moments_layout"
+    tools:context=".Module.Moments.ViewMomentFragment">
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/moments_background"
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/moments_close"
+        android:src="@drawable/ic_close_24dp"
+        android:padding="@dimen/margin_normal"
+        android:tint="@android:color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/moments_tweetlayout"
+        android:background="#10000000"
+        android:padding="@dimen/margin_large"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/margin_large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/moments_date"
+            style="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle"
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/moments_tweet"
+            style="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle"
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -27,7 +27,8 @@
         <activity android:name=".Module.Authentication.LoginActivity" />
         <activity android:name=".Module.Authentication.RegisterActivity" />
         <activity android:name=".Module.Moments.SelectTweetsActivity" />
-        <activity android:name=".Module.Moments.ManageMomentActivity"></activity>
+        <activity android:name=".Module.Moments.ManageMomentActivity" />
+        <activity android:name=".Module.Moments.ViewMomentActivity" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

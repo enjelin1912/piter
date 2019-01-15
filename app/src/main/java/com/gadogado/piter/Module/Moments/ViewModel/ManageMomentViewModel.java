@@ -7,12 +7,14 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 
 import com.gadogado.piter.Helper.Database.DatabaseDAO;
 import com.gadogado.piter.Helper.Database.RoomDB;
 import com.gadogado.piter.Helper.Model.Moment;
 import com.gadogado.piter.Helper.Model.Tweet;
 import com.gadogado.piter.Module.DatabaseListener;
+import com.gadogado.piter.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,9 +28,12 @@ public class ManageMomentViewModel extends AndroidViewModel {
     private DatabaseDAO dbDao;
     private Application application;
     private List<Integer> selectedTweets;
+
     private Bitmap bitmap;
     private Uri uri;
     private String filename;
+
+    private int selectedColor;
 
     public ManageMomentViewModel(Application application) {
         super(application);
@@ -39,6 +44,8 @@ public class ManageMomentViewModel extends AndroidViewModel {
         bitmap = null;
         uri = null;
         filename = null;
+
+        selectedColor = ContextCompat.getColor(application.getApplicationContext(), R.color.colorLightBlue);
     }
 
     public void addMoment(Moment moment, DatabaseListener listener) {
@@ -51,6 +58,14 @@ public class ManageMomentViewModel extends AndroidViewModel {
 
     public List<Integer> getSelectedTweets() {
         return selectedTweets;
+    }
+
+    public int getSelectedColor() {
+        return selectedColor;
+    }
+
+    public void setSelectedColor(int selectedColor) {
+        this.selectedColor = selectedColor;
     }
 
     public Bitmap getBitmap() {

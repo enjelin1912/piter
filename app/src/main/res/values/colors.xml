@@ -6,4 +6,45 @@
 
     <color name="colorWarning">#B00020</color>
     <color name="colorLink">#33B5E5</color>
+
+
+    <color name="colorRed">#B71C1C</color>
+    <color name="colorPink">#880E4F</color>
+    <color name="colorPurple">#4A148C</color>
+    <color name="colorDeepPurple">#311B92</color>
+    <color name="colorIndigo">#1A237E</color>
+    <color name="colorBlue">#0D47A1</color>
+    <color name="colorLightBlue">#01579B</color>
+    <color name="colorCyan">#006064</color>
+    <color name="colorTeal">#004D40</color>
+    <color name="colorGreen">#1B5E20</color>
+    <color name="colorLightGreen">#33691E</color>
+    <color name="colorLime">#827717</color>
+    <color name="colorOrange">#E65100</color>
+    <color name="colorDeepOrange">#BF360C</color>
+    <color name="colorBrown">#3E2723</color>
+    <color name="colorGray">#212121</color>
+    <color name="colorBlueGray">#263238</color>
+    <color name="colorBlack">#000000</color>
+
+    <array name="colorPicker">
+        <item>@color/colorRed</item>
+        <item>@color/colorPink</item>
+        <item>@color/colorPurple</item>
+        <item>@color/colorDeepPurple</item>
+        <item>@color/colorIndigo</item>
+        <item>@color/blue</item>
+        <item>@color/colorLightBlue</item>
+        <item>@color/colorCyan</item>
+        <item>@color/colorTeal</item>
+        <item>@color/colorGreen</item>
+        <item>@color/colorLightGreen</item>
+        <item>@color/colorLime</item>
+        <item>@color/colorOrange</item>
+        <item>@color/colorDeepOrange</item>
+        <item>@color/colorBrown</item>
+        <item>@color/colorGray</item>
+        <item>@color/colorBlueGray</item>
+        <item>@color/colorBlack</item>
+    </array>
 </resources>

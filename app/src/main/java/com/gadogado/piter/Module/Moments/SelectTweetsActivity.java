@@ -1,7 +1,6 @@
 package com.gadogado.piter.Module.Moments;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -13,11 +12,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gadogado.piter.Helper.Model.Tweet;
+import com.gadogado.piter.Module.Moments.Adapter.SelectTweetsRecyclerViewAdapter;
 import com.gadogado.piter.Module.Moments.ViewModel.SelectTweetsViewModel;
 import com.gadogado.piter.Module.ViewImageActivity;
 import com.gadogado.piter.R;
@@ -66,6 +65,13 @@ public class SelectTweetsActivity extends AppCompatActivity {
                 recyclerView.setAdapter(adapter);
             }
         });
+
+        ManageMomentActivity.listener = new SaveMomentListener() {
+            @Override
+            public void closeSelectTweet() {
+                finish();
+            }
+        };
     }
 
     private SelectTweetsRecyclerViewAdapter assignAdapter() {

@@ -24,8 +24,10 @@ import android.widget.Toast;
 import com.gadogado.piter.Helper.Model.Moment;
 import com.gadogado.piter.Helper.Utility;
 import com.gadogado.piter.Module.DatabaseListener;
+import com.gadogado.piter.Module.Moments.Adapter.MomentsRecyclerViewAdapter;
 import com.gadogado.piter.Module.Moments.ViewModel.MomentsViewModel;
 import com.gadogado.piter.R;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +101,14 @@ public class MomentsFragment extends Fragment {
     }
 
     private MomentsRecyclerViewAdapter assignAdapter() {
-        return new MomentsRecyclerViewAdapter(getActivity(), momentList);
+        return new MomentsRecyclerViewAdapter(getActivity(), momentList, new MomentsRecyclerViewAdapter.MomentsListener() {
+            @Override
+            public void viewMoment(Moment moment) {
+                Intent intent = new Intent(getActivity(), ViewMomentActivity.class);
+                intent.putExtra(ViewMomentActivity.INTENT_VIEWMOMENT, new Gson().toJson(moment));
+                startActivity(intent);
+            }
+        });
     }
 
     private class ScrollListener extends RecyclerView.OnScrollListener {
@@ -159,7 +168,7 @@ public class MomentsFragment extends Fragment {
         @Override
         public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
             if (direction == ItemTouchHelper.START) {
-                Utility.showOptionAlertDialog(getActivity(), R.string.delete_tweet, R.string.areyousure_deletetweet, false,
+                Utility.showOptionAlertDialog(getActivity(), R.string.delete_moment, R.string.areyousure_deletemoment, false,
                         new Utility.DialogListener() {
                             @Override
                             public void executeYes() {

@@ -156,4 +156,8 @@ public class Utility {
 
         return list;
     }
+
+    public static String getColorHex(int intColor) {
+        return String.format("#%06X", (0xFFFFFF & intColor));
+    }
 }
