@@ -14,8 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Module.MainActivity" />
-        <activity
-            android:name=".Module.Authentication.SplashActivity">
+        <activity android:name=".Module.Authentication.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +25,9 @@
         <activity android:name=".Module.ViewImageActivity" />
         <activity android:name=".Module.Home.SearchActivity" />
         <activity android:name=".Module.Authentication.LoginActivity" />
-        <activity android:name=".Module.Authentication.RegisterActivity"></activity>
+        <activity android:name=".Module.Authentication.RegisterActivity" />
+        <activity android:name=".Module.Moments.SelectTweetsActivity" />
+        <activity android:name=".Module.Moments.ManageMomentActivity"></activity>
     </application>
 
 </manifest>

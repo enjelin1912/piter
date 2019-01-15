@@ -5,6 +5,7 @@ public class DBConstant {
 
     public static final String TABLE_TWEETS = "tweets";
     public static final String TABLE_USERS = "users";
+    public static final String TABLE_MOMENTS = "moments";
 
     public static final String COL_ID = "id";
     public static final String COL_MESSAGE = "message";
@@ -16,5 +17,8 @@ public class DBConstant {
     public static final String COL_PASSWORD = "password";
     public static final String COL_NAME = "name";
 
-
+    public static final String COL_TITLE = "title";
+    public static final String COL_DESCRIPTION = "description";
+    public static final String COL_TWEETID = "tweetID";
+    public static final String COL_COLOR = "color";
 }

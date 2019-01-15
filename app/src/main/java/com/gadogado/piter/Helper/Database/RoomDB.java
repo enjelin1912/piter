@@ -5,10 +5,11 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
+import com.gadogado.piter.Helper.Model.Moment;
 import com.gadogado.piter.Helper.Model.Tweet;
 import com.gadogado.piter.Helper.Model.User;
 
-@Database(entities = {User.class, Tweet.class}, version = 1, exportSchema = false)
+@Database(entities = {User.class, Tweet.class, Moment.class}, version = 1, exportSchema = false)
 public abstract class RoomDB extends RoomDatabase {
     public abstract DatabaseDAO dbDao();
     private static RoomDB INSTANCE;

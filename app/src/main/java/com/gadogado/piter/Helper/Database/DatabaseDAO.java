@@ -7,6 +7,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import com.gadogado.piter.Helper.Model.Moment;
 import com.gadogado.piter.Helper.Model.Tweet;
 import com.gadogado.piter.Helper.Model.User;
 
@@ -46,6 +47,17 @@ public interface DatabaseDAO {
             " WHERE " + DBConstant.COL_USERNAME + " = :username AND " + DBConstant.COL_HASHTAG + " LIKE :tag" +
             " ORDER BY " + DBConstant.COL_ID + " DESC")
     LiveData<List<Tweet>> getTweetsByTag(String username, String tag);
+
+    @Insert
+    void addMoment(Moment moment);
+
+    @Delete
+    void deleteMoment(Moment moment);
+
+    @Query("SELECT * FROM " + DBConstant.TABLE_MOMENTS +
+            " WHERE " + DBConstant.COL_USERNAME + " = :username" +
+            " ORDER BY " + DBConstant.COL_ID + " DESC")
+    LiveData<List<Moment>> getAllMoments(String username);
 
 
 }

@@ -4,25 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Module.Home.SearchActivity">
+    tools:context=".Module.Moments.SelectTweetsActivity">
 
     <include layout="@layout/layout_toolbar"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_below="@+id/layout_toolbar"
-        android:id="@+id/search_recycler_view"
+        android:id="@+id/moments_recycler_view"
         android:paddingTop="@dimen/margin_normal"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-
-    <TextView
-        android:visibility="gone"
-        android:id="@+id/search_notweetfound"
-        android:text="@string/no_tweet_found"
-        android:layout_centerInParent="true"
-        style="@style/TextAppearance.AppCompat.Body1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
 </RelativeLayout>

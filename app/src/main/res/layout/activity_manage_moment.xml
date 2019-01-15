@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Module.Moments.ManageMomentActivity">
+
+    <include layout="@layout/layout_toolbar"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:padding="@dimen/margin_normal"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/moments_title"
+                    android:hint="@string/title"
+                    android:maxLength="32"
+                    android:maxLines="1"
+                    android:inputType="textCapWords"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/moments_descripiton"
+                    android:hint="@string/description"
+                    android:maxLength="280"
+                    android:maxLines="3"
+                    android:lines="3"
+                    android:gravity="top"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:text="@string/cover_image"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/moments_imagelayout"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/moments_coverimage"
+                    app:layout_constraintDimensionRatio="2:1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:id="@+id/moments_camera"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:src="@drawable/ic_photo_camera_24dp"
+                    android:adjustViewBounds="true"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+
+                <ImageButton
+                    android:id="@+id/moments_gallery"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:src="@drawable/ic_collections_24dp"
+                    android:adjustViewBounds="true"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+
+                <ImageButton
+                    android:id="@+id/moments_clear"
+                    android:backgroundTint="@android:color/darker_gray"
+                    android:src="@drawable/ic_clear_48dp"
+                    android:adjustViewBounds="true"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <TextView
+                android:text="@string/background_color"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RelativeLayout
+                android:layout_marginTop="@dimen/margin_small"
+                android:background="@android:color/black"
+                android:layout_width="24dp"
+                android:layout_height="24dp">
+
+                <View
+                    android:id="@+id/moments_backgroundcolor"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/white"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

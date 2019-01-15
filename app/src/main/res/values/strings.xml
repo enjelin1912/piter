@@ -40,6 +40,21 @@
     <string name="signout_areyousure">Are you sure you want to sign out?</string>
     <string name="tweet_deleted">Tweet Deleted</string>
     <string name="search">Search</string>
+    <string name="search_hashtag">Search Hashtag</string>
+    <string name="no_moment_found">No Moment Found</string>
+    <string name="moment_deleted">Moment Deleted</string>
+    <string name="select_tweets">Select Tweets</string>
+    <string name="no_tweet_selected">No Tweet Selected</string>
+    <string name="next">Next</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="cover_image">Cover Image</string>
+    <string name="background_color">Background Color</string>
+    <string name="manage_moment">Manage Moment</string>
+    <string name="save">Save</string>
+    <string name="save_moment">Save Moment</string>
+    <string name="areyousure_savemoment">Are you sure you want to save this moment?</string>
+    <string name="moment_saved">Moment Saved</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -1,25 +1,18 @@
 package com.gadogado.piter.Module.Home;
 
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
@@ -30,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gadogado.piter.Helper.Database.DBConstant;
 import com.gadogado.piter.Helper.Model.Tweet;
 import com.gadogado.piter.Helper.Utility;
 import com.gadogado.piter.Module.DatabaseListener;
@@ -38,7 +30,6 @@ import com.gadogado.piter.Module.Home.ViewModel.HomeViewModel;
 import com.gadogado.piter.Module.ViewImageActivity;
 import com.gadogado.piter.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -204,7 +195,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        getActivity().getMenuInflater().inflate(R.menu.menu_home, menu);
+        getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
         super.onPrepareOptionsMenu(menu);
     }
 

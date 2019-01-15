@@ -1,28 +1,27 @@
 package com.gadogado.piter.Module.Home;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gadogado.piter.Helper.Database.DBConstant;
 import com.gadogado.piter.Helper.Model.Tweet;
 import com.gadogado.piter.Helper.Utility;
 import com.gadogado.piter.Module.DatabaseListener;
@@ -38,10 +37,13 @@ import butterknife.ButterKnife;
 
 public class SearchActivity extends AppCompatActivity {
 
+    @BindView(R.id.layout_toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar_title) TextView toolbarTitle;
     @BindView(R.id.search_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.search_notweetfound) TextView noTweetFoundText;
 
     private HomeRecyclerViewAdapter adapter;
+    private List<Tweet> tweetList;
 
     private Context context = SearchActivity.this;
     private SearchViewModel searchViewModel;
@@ -55,14 +57,24 @@ public class SearchActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
+        getSupportActionBar().setTitle(null);
+        toolbarTitle.setText(R.string.search);
+
+        tweetList = new ArrayList<>();
+
         recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
 
         searchViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
-        searchViewModel.setTag(getIntent().getStringExtra(INTENT_SEARCHTAG));
+        searchViewModel.setTag(searchViewModel.getTag() != null ?
+                searchViewModel.getTag() : getIntent().getStringExtra(INTENT_SEARCHTAG));
         searchViewModel.getTweets().observe(this, new Observer<List<Tweet>>() {
             @Override
             public void onChanged(@Nullable List<Tweet> tweets) {
-                adapter = assignAdapter(tweets);
+                tweetList = tweets;
+                adapter = assignAdapter();
                 recyclerView.setAdapter(adapter);
 
                 if (tweets.size() == 0) {
@@ -78,9 +90,12 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
+
+        toolbarTitle.setText(searchViewModel.getTag() == null || searchViewModel.getTag().equals("") ?
+                getResources().getString(R.string.search) : searchViewModel.getTag());
     }
 
-    private HomeRecyclerViewAdapter assignAdapter(List<Tweet> tweetList) {
+    private HomeRecyclerViewAdapter assignAdapter() {
         return new HomeRecyclerViewAdapter(context, tweetList, new HomeRecyclerViewAdapter.HomeListListener() {
             @Override
             public void viewImage(String imagePath) {
@@ -162,5 +177,62 @@ public class SearchActivity extends AppCompatActivity {
                         });
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.item_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.search));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchViewModel.setTag(query.startsWith("#") ? query : "#" + query);
+
+                searchViewModel.getTweets().observe(SearchActivity.this, new Observer<List<Tweet>>() {
+                    @Override
+                    public void onChanged(@Nullable List<Tweet> tweets) {
+                        tweetList = tweets;
+
+                        adapter = assignAdapter();
+                        recyclerView.setAdapter(adapter);
+
+                        if (tweetList.size() == 0) {
+                            noTweetFoundText.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        }
+                        else {
+                            noTweetFoundText.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+
+                            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeRecylerView());
+                            itemTouchHelper.attachToRecyclerView(recyclerView);
+                        }
+                    }
+                });
+
+                toolbarTitle.setText(searchViewModel.getTag());
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
