@@ -1,14 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Module.Configuration.ConfigurationFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content">
 
-</FrameLayout>
+        <LinearLayout
+            android:padding="@dimen/margin_normal"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/change_name"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/configuration_name"
+                    android:hint="@string/new_name"
+                    android:maxLength="20"
+                    android:maxLines="1"
+                    android:inputType="textCapWords"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/configuration_savenamebutton"
+                android:background="@drawable/rounded_button_disable"
+                android:text="@string/save"
+                android:textColor="@android:color/white"
+                android:layout_gravity="end"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="@string/change_password"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="@dimen/margin_small"
+                app:passwordToggleEnabled="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/configuration_oldpassword"
+                    android:hint="@string/old_password"
+                    android:maxLength="20"
+                    android:maxLines="1"
+                    android:inputType="textPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="@dimen/margin_small"
+                app:passwordToggleEnabled="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/configuration_newpassword"
+                    android:hint="@string/new_password"
+                    android:maxLength="20"
+                    android:maxLines="1"
+                    android:inputType="textPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:gravity="top"
+                    android:text="@string/password_minchar"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                    android:layout_marginEnd="@dimen/margin_normal"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+
+                <Button
+                    android:id="@+id/configuration_savepasswordbutton"
+                    android:background="@drawable/rounded_button_disable"
+                    android:text="@string/save"
+                    android:textColor="@android:color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <include layout="@layout/layout_loading"/>
+
+</RelativeLayout>

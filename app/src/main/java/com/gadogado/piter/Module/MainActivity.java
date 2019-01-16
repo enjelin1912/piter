@@ -15,9 +15,11 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.gadogado.piter.Helper.Model.User;
 import com.gadogado.piter.Helper.Utility;
 import com.gadogado.piter.Module.About.AboutFragment;
 import com.gadogado.piter.Module.Authentication.LoginActivity;
@@ -53,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(null);
 
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
+        User user = Utility.getUserInfo(context);
+        View drawerHeader = navigationView.getHeaderView(0);
+        TextView headerName = drawerHeader.findViewById(R.id.drawer_header_name);
+        TextView headerUsername = drawerHeader.findViewById(R.id.drawer_header_username);
+        headerName.setText(user.name);
+        headerUsername.setText("@".concat(user.username));
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
